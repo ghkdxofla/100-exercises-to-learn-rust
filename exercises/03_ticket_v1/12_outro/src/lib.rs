@@ -19,6 +19,10 @@ pub struct Order {
 
 impl Order {
     pub fn new(product_name: String, quantity: u64, unit_price: u64) -> Self {
+        Order::validate_product_name(&product_name);
+        Order::validate_quantity(quantity);
+        Order::validate_unit_price(unit_price);
+
         Self {
             product_name,
             quantity,
@@ -29,8 +33,10 @@ impl Order {
     pub fn total(&self) -> u64 {
         self.quantity * self.unit_price
     }
-    fn validate_product_name(product_name: &str) -> bool {
-        !product_name.is_empty() && product_name.len() <= 300
+    fn validate_product_name(product_name: &str) {
+        if product_name.is_empty() || product_name.len() > 300 {
+            panic!("Product name must not be empty and must not exceed 300 characters");
+        }
     }
     pub fn set_product_name(&mut self, product_name: String) {
         Order::validate_product_name(&product_name);
@@ -41,8 +47,10 @@ impl Order {
         &self.product_name
     }
 
-    fn validate_quantity(quantity: u64) -> bool {
-        quantity > 0
+    fn validate_quantity(quantity: u64) {
+        if quantity <= 0 {
+            panic!("Quantity must be greater than zero");
+        }
     }
 
     pub fn set_quantity(&mut self, quantity: u64) {
@@ -54,13 +62,20 @@ impl Order {
         &self.quantity
     }
 
-    fn validate_unit_price(unit_price: u64) -> bool {
-        unit_price % 50 == 0 ||
+    fn validate_unit_price(unit_price: u64) {
+        let is_cent = unit_price % 50 == 0 ||
             unit_price % 25 == 0 ||
             unit_price % 10 == 0 ||
             unit_price % 5 == 0 ||
-            unit_price % 1 == 0 ||
-            unit_price > 0
+            unit_price % 1 == 0;
+
+        if !is_cent {
+            panic!("Unit price must be greater than zero and in cents");
+        }
+
+        if unit_price <= 0 {
+            panic!("Unit price must be greater than zero");
+        }
     }
 
     pub fn set_unit_price(&mut self, unit_price: u64) {
