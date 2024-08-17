@@ -21,7 +21,7 @@ macro_rules! saturating_u16 {
 
         impl From<&$type> for SaturatingU16 {
             fn from(value: &$type) -> SaturatingU16 {
-                Self { value: *value as u16 }
+                value.clone().into()
             }
         }
 
@@ -42,12 +42,7 @@ macro_rules! saturating_u16 {
             type Output = SaturatingU16;
 
             fn add(self, rhs: &$type) -> SaturatingU16 {
-                let (sum, overflow) = self.value.overflowing_add(*rhs as u16);
-                if overflow {
-                    Self::from(u16::MAX)
-                } else {
-                    Self::from(sum)
-                }
+                self + *rhs
             }
         }
 
