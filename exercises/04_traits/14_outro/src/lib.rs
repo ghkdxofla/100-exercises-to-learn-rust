@@ -29,12 +29,7 @@ macro_rules! saturating_u16 {
             type Output = SaturatingU16;
 
             fn add(self, rhs: $type) -> SaturatingU16 {
-                let (sum, overflow) = self.value.overflowing_add(rhs as u16);
-                if overflow {
-                    Self::from(u16::MAX)
-                } else {
-                    Self::from(sum)
-                }
+                self.value.saturating_add(rhs as u16).into()
             }
         }
 
@@ -71,11 +66,6 @@ impl Add for SaturatingU16 {
     type Output = SaturatingU16;
 
     fn add(self, rhs: SaturatingU16) -> SaturatingU16 {
-        let (sum, overflow) = self.value.overflowing_add(rhs.value);
-        if overflow {
-            Self::from(u16::MAX)
-        } else {
-            Self::from(sum)
-        }
+        self.value.saturating_add(rhs.value).into()
     }
 }
